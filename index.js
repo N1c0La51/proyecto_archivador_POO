@@ -50,12 +50,12 @@ class Profesor {
     calcularSalario(programaTipo) {
         let salario = this.tarifaHora * this.horasTrabajadas;
         if (this.titulacion === 'maestria') {
-            salario *= 1.07; // Recargo del 7% por maestría
+            salario *= 1.07; 
         }
         if (programaTipo === 'diurno') {
-            salario *= 1.1; // Recargo del 10% para programas diurnos   
+            salario *= 1.1;   
         } else if (programaTipo === 'nocturno') {
-            salario *= 1.15; // Recargo del 15% para programas nocturnos
+            salario *= 1.15;
         }
         return salario;
     }
@@ -316,7 +316,7 @@ console.log('Información de los profesores:');
 profesores.forEach((profesor, index) => {
     costoTotal += profesor.calcularSalario();
     if (profesor.tipo === 'planta') {
-        costoTotalPlanta += profesor.calcularSalario(); // Sumar al costo total solo si es de tipo "planta"
+        costoTotalPlanta += profesor.calcularSalario();
     }
     console.log(`Profesor ${index + 1}:`);
     console.log(`Nombre: ${profesor.nombre}`);
