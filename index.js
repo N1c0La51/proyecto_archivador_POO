@@ -50,10 +50,10 @@ class Profesor {
     calcularSalario(programaTipo) {
         let salario = this.tarifaHora * this.horasTrabajadas;
         if (this.titulacion === 'maestria') {
-            salario *= 1.07; 
+            salario *= 1.07;
         }
         if (programaTipo === 'diurno') {
-            salario *= 1.1;   
+            salario *= 1.1;
         } else if (programaTipo === 'nocturno') {
             salario *= 1.15;
         }
@@ -219,11 +219,11 @@ function calcularSalarioProfesoresCatedraticos() {
     console.log(`El costo total de los salarios de los profesores catedraticos es: $${costoTotalProfesoresCatedraticos}`);
 }
 
-function contarProfesoresConMaestria(profesores){
+function contarProfesoresConMaestria(profesores) {
     let contadorMaestria = 0;
 
     profesores.forEach(profesor => {
-        if (profesor.titulacion.toLowerCase() === 'maestria'){
+        if (profesor.titulacion.toLowerCase() === 'maestria') {
             contadorMaestria++;
         }
     });
@@ -231,31 +231,7 @@ function contarProfesoresConMaestria(profesores){
     console.log(`El numero de profesores con maestria es: ${contadorMaestria}`);
 }
 
-function ingresarDatosProfesor() {
-    const nombreProfesor = readlineSync.question(`Ingrese el nombre del profesor: `);
-    const tipoProfesor = readlineSync.question(`Ingrese el tipo del profesor: `);
-    const tarifaHora = parseFloat(readlineSync.question(`Ingrese la tarifa por hora del profesor: `));
-    const horasTrabajadas = parseFloat(readlineSync.question(`Ingrese las horas trabajadas del profesor: `));
-    const titulacion = readlineSync.question(`Ingrese la titulacion del profesor: `);
-    const horasExtra = readlineSync.question(`El profesor hizo horas extra? (si/no): `);
-    let pagoTotal;
 
-    if (horasExtra.toLowerCase() === 'si') {
-        const horasExtras = parseFloat(readlineSync.question(`Ingrese la cantidad de horas extra trabajadas: `));
-        pagoTotal = (horasTrabajadas + horasExtras) * tarifaHora;
-    } else {
-        pagoTotal = horasTrabajadas * tarifaHora;
-    }
-
-    return {
-        nombre: nombreProfesor,
-        tipo: tipoProfesor,
-        tarifaHora: tarifaHora,
-        horasTrabajadas: horasTrabajadas,
-        titulacion: titulacion,
-        pagoTotal: pagoTotal
-    };
-}
 
 function crearProfesor(datosProfesor) {
     switch (datosProfesor.tipo.toLowerCase()) {
@@ -268,6 +244,37 @@ function crearProfesor(datosProfesor) {
         default:
             throw new Error(`Tipo de profesor no valido.`);
     }
+}
+
+function ingresarDatosProfesor(asignaturas) {
+    const nombreProfesor = readlineSync.question(`Ingrese el nombre del profesor: `);
+    const tipoProfesor = readlineSync.question(`Ingrese el tipo del profesor: `);
+    const tarifaHora = parseFloat(readlineSync.question(`Ingrese la tarifa por hora del profesor: `));
+    const titulacion = readlineSync.question(`Ingrese la titulacion del profesor: `);
+    const horasExtra = readlineSync.question(`El profesor hizo horas extra? (si/no): `);
+    let pagoTotal;
+
+    let horasTrabajadas = 0;
+    asignaturas.forEach(asignatura => {
+        horasTrabajadas += asignatura.horas;
+    });
+
+    if (horasExtra.toLowerCase() === 'si') {
+        const horasExtras = parseFloat(readlineSync.question(`Ingrese la cantidad de horas extra trabajadas: `));
+        horasTrabajadas += horasExtras;
+        pagoTotal = (horasTrabajadas) * tarifaHora;
+    } else {
+        pagoTotal = horasTrabajadas * tarifaHora;
+    }
+
+    return {
+        nombre: nombreProfesor,
+        tipo: tipoProfesor,
+        tarifaHora: tarifaHora,
+        horasTrabajadas: horasTrabajadas,
+        titulacion: titulacion,
+        pagoTotal: pagoTotal
+    };
 }
 
 const programaIngenieria = new Programa('Ingenieria de Sistemas', 'diurno');
@@ -286,9 +293,11 @@ let costoTotalPlanta = 0;
 
 const profesores = [];
 
+const asignaturas = [asignatura1, asignatura2]; 
+
 for (let i = 0; i < cantidadProfesores; i++) {
     console.log(`Ingrese los datos del profesor ${i + 1}:`);
-    const datosProfesor = ingresarDatosProfesor();
+    const datosProfesor = ingresarDatosProfesor(asignaturas); 
     const nuevoProfesor = crearProfesor(datosProfesor);
     console.log('Lista de programas disponibles: ');
     console.log('1. Ingenieria de Sistemas (diurno)');
@@ -311,6 +320,7 @@ for (let i = 0; i < cantidadProfesores; i++) {
 
     profesores.push(nuevoProfesor);
 }
+
 
 console.log('Información de los profesores:');
 profesores.forEach((profesor, index) => {
